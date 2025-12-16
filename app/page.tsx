@@ -1,7 +1,7 @@
-import Image from "next/image";
+import { SignupForm } from "./forms/SignupForm";
 
 export default function Home() {
   return (
-    <div>FormForge</div>
+    <div><SignupForm /></div>
   );
 }
