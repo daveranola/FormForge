@@ -1,7 +1,11 @@
-import { SignupForm } from "./forms/SignupForm";
+import { LoginForm } from "@/app/forms/LoginForm";
+import { SignupForm } from "@/app/forms/SignupForm";
 
 export default function Home() {
   return (
-    <div><SignupForm /></div>
+    <div>
+      <SignupForm />
+      <LoginForm />
+      </div>
   );
 }
