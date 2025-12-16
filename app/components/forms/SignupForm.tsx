@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from "react";
-import { SignupFormSchema, type SignupValues } from "../lib/validation/signup";
+import { SignupFormSchema, type SignupValues } from "@/app/lib/validation/signup";
 
 // holds errors for each field
 type FieldErrors = Partial<Record<keyof SignupValues, string>>;
@@ -10,7 +10,7 @@ export function SignupForm() {
     const [ errors, setErrors ] = useState<FieldErrors>({});
     const [ message, setMessage ] = useState<string | null>(null);
 
-    const [ form, setForm ] = useState({
+    const [ form, setForm ] = useState<SignupValues>({
         name: '',
         email: '',
         password: ''

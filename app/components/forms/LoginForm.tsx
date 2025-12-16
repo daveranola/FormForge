@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { LoginFormSchema, type LoginValues } from "@/app/lib/validation/login";
 
@@ -9,6 +10,7 @@ type FieldErrors = Partial<Record<keyof LoginValues, string>>;
 export function LoginForm() {  
     const [ errors, setErrors ] = useState<FieldErrors>({});
     const [ message, setMessage ] = useState<string | null>(null);
+    const router = useRouter();
 
     const [ form, setForm ] = useState<LoginValues>({
         email: '',
@@ -56,6 +58,7 @@ export function LoginForm() {
                 return;
             }
             setMessage('Login successful!');
+            router.push('/dashboard');
         } catch (error) {
             console.log('Error during login:', error);
             setMessage('An unexpected error occurred.');
