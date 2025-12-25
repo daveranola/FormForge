@@ -9,6 +9,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Link className="block rounded px-3 py-2 hover:bg-gray-100" href="/dashboard">
             Overview
           </Link>
+          <Link className="block rounded px-3 py-2 hover:bg-gray-100" href="/projects">
+            Projects
+          </Link>
         </nav>
       </aside>
       <section className="p-8">

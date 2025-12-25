@@ -1,11 +1,15 @@
+'use client';
+
 import { createProjectSchema, type CreateProjectInput } from "@/app/lib/validation/createProject"
 import { useState } from "react"
+import { useRouter } from 'next/navigation'
 
 type FieldErrors = Partial<Record<keyof CreateProjectInput, string>>;
 
 export function CreateProject() {
     const [ errors, setErrors ] = useState<FieldErrors>({});
     const [ message, setMessage ] = useState<string | null>(null);
+    const router = useRouter();
 
     const [formData, setFormData] = useState<CreateProjectInput>({
         name: ""
@@ -48,6 +52,7 @@ export function CreateProject() {
                 return;
             }
             setMessage('Project created successfully!');
+            router.push(`/projects/${data.project.id}`);
         } catch (error) {
             console.error('Failed to create project', error);
             setMessage('An unexpected error occurred.');
