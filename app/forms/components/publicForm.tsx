@@ -77,7 +77,7 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {fields.map((field) => {
         const value = answers[field.key] ?? "";
         const required = field.required;
@@ -85,11 +85,12 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
         if (field.type === "textarea") {
           return (
             <label key={field.id} className="block space-y-1">
-              <span>{field.label}</span>
+              <span className="text-sm font-medium text-gray-700">{field.label}</span>
               <textarea
                 required={required}
                 value={String(value)}
                 onChange={(e) => handleChange(field.key, e.target.value)}
+                className="min-h-[120px] w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-400 focus:outline-none"
               />
             </label>
           );
@@ -99,11 +100,12 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
           const options = normalizeOptions(field.options);
           return (
             <label key={field.id} className="block space-y-1">
-              <span>{field.label}</span>
+              <span className="text-sm font-medium text-gray-700">{field.label}</span>
               <select
                 required={required}
                 value={String(value)}
                 onChange={(e) => handleChange(field.key, e.target.value)}
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-400 focus:outline-none"
               >
                 <option value="">Select</option>
                 {options.map((option) => (
@@ -118,13 +120,13 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
 
         if (field.type === "checkbox") {
           return (
-            <label key={field.id} className="flex items-center gap-2">
+            <label key={field.id} className="flex items-center gap-2 text-sm text-gray-700">
               <input
                 type="checkbox"
                 checked={Boolean(value)}
                 onChange={(e) => handleChange(field.key, e.target.checked)}
               />
-              <span>{field.label}</span>
+              <span className="font-medium">{field.label}</span>
             </label>
           );
         }
@@ -135,19 +137,25 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
 
         return (
           <label key={field.id} className="block space-y-1">
-            <span>{field.label}</span>
+            <span className="text-sm font-medium text-gray-700">{field.label}</span>
             <input
               type={inputType}
               required={required}
               value={String(value)}
               onChange={(e) => handleChange(field.key, e.target.value)}
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-400 focus:outline-none"
             />
           </label>
         );
       })}
 
-      <button type="submit">Submit</button>
-      {message && <p>{message}</p>}
+      <button
+        type="submit"
+        className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+      >
+        Submit
+      </button>
+      {message && <p className="text-sm text-gray-600">{message}</p>}
     </form>
   );
 }

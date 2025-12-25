@@ -19,22 +19,26 @@ export default async function PublicFormPage({
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 p-6">
-      <div>
-        <h1 className="text-2xl font-semibold">{form.name}</h1>
-        <p className="text-gray-700">Fill out the form below.</p>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="mx-auto max-w-2xl space-y-6 px-4">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h1 className="text-2xl font-semibold">{form.name}</h1>
+          <p className="text-sm text-gray-500">Fill out the form below.</p>
+        </div>
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <PublicForm
+            slug={form.slug}
+            fields={form.fields.map((field) => ({
+              id: field.id,
+              key: field.key,
+              label: field.label,
+              type: field.type,
+              required: field.required,
+              options: field.options,
+            }))}
+          />
+        </div>
       </div>
-      <PublicForm
-        slug={form.slug}
-        fields={form.fields.map((field) => ({
-          id: field.id,
-          key: field.key,
-          label: field.label,
-          type: field.type,
-          required: field.required,
-          options: field.options,
-        }))}
-      />
     </div>
   );
 }

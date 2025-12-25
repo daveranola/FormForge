@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createSupaBaseClient } from "@/app/lib/supabase/server";
 import { prisma } from "@/app/lib/prisma";
+import { ProjectListClient } from "@/app/(dashboard)/projects/components/projectListClient";
 
 export async function ProjectList() {
   const supabase = createSupaBaseClient();
@@ -11,9 +12,9 @@ export async function ProjectList() {
 
   if (authError || !user) {
     return (
-      <div className="space-y-2">
-        <p>Please log in to view your projects.</p>
-        <Link className="text-blue-600 underline" href="/auth/login">
+      <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center">
+        <p className="text-sm text-gray-600">Please log in to view your projects.</p>
+        <Link className="mt-2 inline-flex text-sm font-medium text-gray-900" href="/auth/login">
           Go to login
         </Link>
       </div>
@@ -26,18 +27,12 @@ export async function ProjectList() {
   });
 
   if (projects.length === 0) {
-    return <p>No projects yet.</p>;
+    return (
+      <div className="rounded-xl border border-dashed border-gray-200 p-6 text-center">
+        <p className="text-sm text-gray-600">No projects yet. Create your first one.</p>
+      </div>
+    );
   }
 
-  return (
-    <ul className="space-y-2">
-      {projects.map((project) => (
-        <li key={project.id}>
-          <Link className="text-blue-600 underline" href={`/projects/${project.id}`}>
-            {project.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+  return <ProjectListClient projects={projects} />;
 }

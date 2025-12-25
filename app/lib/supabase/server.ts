@@ -17,9 +17,19 @@ export function createSupaBaseClient() {
         // Write the cookie mutations Supabase requests back to the response.
         async setAll(cookiesToSet) {
           const cookieStore = await cookies();
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set({ name, value, ...options });
-          });
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set({ name, value, ...options });
+            });
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              error.message.includes("Cookies can only be modified")
+            ) {
+              return;
+            }
+            throw error;
+          }
         },
       },
     }
