@@ -5,10 +5,73 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum FormStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+model Project {
+    id Int @id @default(autoincrement())
+    ownerId String @db.Uuid
+    name String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    forms Form[]
+}
+
+model Form {
+  id Int @id @default(autoincrement())
+  projectId Int
+  name String
+  slug String @unique
+  status FormStatus @default(DRAFT)
+  createdAt DateTime @default(now())
+  uodatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id])
+  fields Field[]
+  submissions Submission[]
+
+  @@index([projectId])
+}
+
+model Field {
+  id Int @id @default(autoincrement())
+  formId Int
+  key String
+  label String
+  type String
+  required Boolean @default(false)
+  orderIndex Int @default(0)
+  options Json?
+  config Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+  @@unique([formId, key])
+  @@index([formId])
+}
+
+model Submission {
+  id Int @id @default(autoincrement())
+  formId Int
+  answersJson Json
+  metadataJson Json?
+  submittedAt DateTime @default(now())
+
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([formId])
+  @@index([submittedAt])
 }
