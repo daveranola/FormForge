@@ -1,18 +1,23 @@
 'use client';
 
-import { createProjectSchema, type CreateProjectInput } from "@/app/lib/validation/createProject"
-import { useState } from "react"
-import { useRouter } from 'next/navigation'
+import { createFormSchema, type CreateFormInput } from "@/app/lib/validation/createForm";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-type FieldErrors = Partial<Record<keyof CreateProjectInput, string>>;
+type FieldErrors = Partial<Record<keyof CreateFormInput, string>>;
 
-export function CreateProject() {
-    const [ errors, setErrors ] = useState<FieldErrors>({});
-    const [ message, setMessage ] = useState<string | null>(null);
+type CreateFormProps = {
+  projectId: number;
+};
+
+export function CreateForm({ projectId }: CreateFormProps) {
+    const [errors, setErrors] = useState<FieldErrors>({});
+    const [message, setMessage] = useState<string | null>(null);
     const router = useRouter();
 
-    const [formData, setFormData] = useState<CreateProjectInput>({
-        name: ""
+    const [formData, setFormData] = useState<CreateFormInput>({
+        name: "",
+        projectId,
     });
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -25,11 +30,11 @@ export function CreateProject() {
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const result = createProjectSchema.safeParse(formData);
+        const result = createFormSchema.safeParse(formData);
         if (!result.success) {
             const fieldErrors: FieldErrors = {};
             for (const issue of result.error.issues) {
-                const field = issue.path[0] as keyof CreateProjectInput;
+                const field = issue.path[0] as keyof CreateFormInput;
                 if (!fieldErrors[field]) {
                     fieldErrors[field] = issue.message;
                 }
@@ -40,7 +45,7 @@ export function CreateProject() {
         setErrors({});
         
         try {
-            const response = await fetch('/api/createProject', {
+            const response = await fetch('/api/createForm', {
                 method: 'POST',
                 headers:{'Content-Type': 'application/json'},
                 body: JSON.stringify(formData)
@@ -48,13 +53,13 @@ export function CreateProject() {
 
             const data = await response.json();
             if (!response.ok) {
-                setMessage(data.error || 'Failed to create project.');
+                setMessage(data.error || 'Failed to create form.');
                 return;
             }
-            setMessage('Project created successfully!');
-            router.push(`/projects/${data.project.id}`);
+            setMessage('Form created successfully!');
+            router.refresh();
         } catch (error) {
-            console.error('Failed to create project', error);
+            console.error('Failed to create form', error);
             setMessage('An unexpected error occurred.');
         }
     }
@@ -65,13 +70,13 @@ export function CreateProject() {
                 <input 
                 type="text"
                     name="name"
-                    placeholder="Project Name"
+                    placeholder="Form Name"
                     onChange={handleChange}
                  />
                  {errors.name && <p className="text-red-500">{errors.name}</p>}
             </div>
             <button>
-                Create Project
+                Create Form
             </button>
             {message && <p>{message}</p>}
         </form>

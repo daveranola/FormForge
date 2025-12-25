@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { createSupaBaseClient } from '@/app/lib/supabase/server';
 import { prisma } from "@/app/lib/prisma";
+import { CreateForm } from "@/app/(dashboard)/forms/components/createForm";
 
 export default async function ProjectPage({
   params,
@@ -40,6 +42,7 @@ export default async function ProjectPage({
     return (
     <div>
       <h1>{project.name}</h1>
+      <CreateForm projectId={projectIdNumber} />
 
       <h2>Forms</h2>
       {project.forms.length === 0 ? (
@@ -47,7 +50,11 @@ export default async function ProjectPage({
       ) : (
         <ul>
           {project.forms.map((f) => (
-            <li key={f.id}>{f.name}</li>
+            <li key={f.id}>
+              <Link className="text-blue-600 underline" href={`/projects/${project.id}/forms/${f.id}`}>
+                {f.name}
+              </Link>
+            </li>
           ))}
         </ul>
       )}
