@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createSupaBaseClient } from "@/app/lib/supabase/server";
 import { prisma } from "@/app/lib/prisma";
+import { FieldManager } from "@/app/(dashboard)/forms/components/fieldManager";
 
 export default async function FormPage({
   params,
@@ -33,6 +34,7 @@ export default async function FormPage({
     },
     include: {
       fields: { orderBy: { orderIndex: "asc" } },
+      submissions: { orderBy: { submittedAt: "desc" }, take: 25 },
     },
   });
 
@@ -45,20 +47,53 @@ export default async function FormPage({
       <div>
         <h1 className="text-2xl font-semibold">{form.name}</h1>
         <p className="text-gray-700">Form ID: {form.id}</p>
+        <p className="text-gray-700">
+          Public URL: <a className="text-blue-600 underline" href={`/forms/${form.slug}`}>/forms/{form.slug}</a>
+        </p>
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold">Fields</h2>
-        {form.fields.length === 0 ? (
-          <p>No fields yet.</p>
+        <FieldManager
+          formId={form.id}
+          initialFields={form.fields.map((field) => ({
+            id: field.id,
+            key: field.key,
+            label: field.label,
+            type: field.type,
+            required: field.required,
+            orderIndex: field.orderIndex,
+          }))}
+        />
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold">Submissions</h2>
+        {form.submissions.length === 0 ? (
+          <p>No submissions yet.</p>
         ) : (
-          <ul className="space-y-2">
-            {form.fields.map((field) => (
-              <li key={field.id}>
-                {field.label} ({field.type})
-              </li>
+          <div className="space-y-4">
+            {form.submissions.map((submission) => (
+              <div key={submission.id} className="rounded border bg-white p-3">
+                <div className="text-sm text-gray-600">
+                  Submitted: {submission.submittedAt.toISOString()}
+                </div>
+                <dl className="mt-2 space-y-1">
+                  {form.fields.map((field) => (
+                    <div key={field.id} className="flex gap-3 text-sm">
+                      <dt className="w-40 font-medium">{field.label}</dt>
+                      <dd className="flex-1 text-gray-800">
+                        {String(
+                          (submission.answersJson as Record<string, unknown>)[
+                            field.key
+                          ] ?? ""
+                        ) || "—"}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
