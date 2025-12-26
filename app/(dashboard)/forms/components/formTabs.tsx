@@ -1,7 +1,7 @@
 'use client';
 
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
-import { FieldManager } from "@/app/(dashboard)/forms/components/fieldManager";
 import { ResponseInsights } from "@/app/(dashboard)/forms/components/responseInsights";
 
 type Field = {
@@ -38,6 +38,11 @@ type FormTabsProps = {
   submissions: SubmissionRow[];
   totalSubmissions: number;
 };
+
+const FieldManager = dynamic(
+  () => import("@/app/(dashboard)/forms/components/fieldManager").then((mod) => mod.FieldManager),
+  { ssr: false }
+);
 
 export function FormTabs({
   formId,
