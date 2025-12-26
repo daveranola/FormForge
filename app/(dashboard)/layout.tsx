@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LogoutButton } from "@/app/(dashboard)/components/logoutButton";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,7 +16,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="grid min-h-screen grid-cols-[240px_1fr] bg-gray-50">
-      <aside className="space-y-6 border-r border-gray-200 bg-white px-6 py-8">
+      <aside className="flex flex-col gap-6 border-r border-gray-200 bg-white px-6 py-8">
         <div className="text-lg font-semibold text-gray-900">FormForge</div>
         <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">
           Workspace
@@ -42,6 +43,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             Projects
           </Link>
         </nav>
+        <div className="mt-auto pt-6">
+          <LogoutButton />
+        </div>
       </aside>
       <section className="p-6 lg:p-8">
         <div className="mx-auto w-full max-w-6xl">{children}</div>
