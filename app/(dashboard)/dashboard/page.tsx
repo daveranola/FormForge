@@ -3,6 +3,8 @@ import { createSupaBaseClient } from "@/app/lib/supabase/server";
 import { prisma } from "@/app/lib/prisma";
 import { CreateProject } from "@/app/(dashboard)/projects/components/createProject";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardHomePage() {
   const supabase = createSupaBaseClient();
   const {

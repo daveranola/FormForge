@@ -1,6 +1,8 @@
 import { CreateProject } from "@/app/(dashboard)/projects/components/createProject";
 import { ProjectList } from "@/app/(dashboard)/projects/components/projectList";
 
+export const dynamic = "force-dynamic";
+
 export default function ProjectsPage() {
   return (
     <div className="space-y-6">
