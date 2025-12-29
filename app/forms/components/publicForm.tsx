@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type FieldOption = { label: string; value: string };
 
@@ -46,6 +46,8 @@ function normalizeOptions(options: unknown): FieldOption[] {
 export function PublicForm({ slug, fields }: PublicFormProps) {
   const [message, setMessage] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
+  const [honeypot, setHoneypot] = useState("");
+  const startedAtRef = useRef<number>(Date.now());
 
   function handleChange(key: string, value: unknown) {
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -59,7 +61,11 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
       const response = await fetch(`/api/forms/slug/${slug}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answersJson: answers }),
+        body: JSON.stringify({
+          answersJson: answers,
+          honeypot,
+          startedAt: startedAtRef.current,
+        }),
       });
 
       const data = await response.json();
@@ -70,6 +76,8 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
 
       setMessage("Thanks! Your response was submitted.");
       setAnswers({});
+      setHoneypot("");
+      startedAtRef.current = Date.now();
     } catch (error) {
       console.error("Failed to submit form", error);
       setMessage("An unexpected error occurred.");
@@ -78,6 +86,18 @@ export function PublicForm({ slug, fields }: PublicFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden">
+        <label className="block space-y-1 text-sm text-gray-700">
+          Company
+          <input
+            type="text"
+            autoComplete="off"
+            tabIndex={-1}
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </label>
+      </div>
       {fields.map((field) => {
         const value = answers[field.key] ?? "";
         const required = field.required;

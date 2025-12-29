@@ -18,6 +18,18 @@ export async function POST(
     );
   }
 
+  const honeypot = result.data.honeypot?.trim() ?? "";
+  if (honeypot.length > 0) {
+    return NextResponse.json({ error: "Spam detected" }, { status: 400 });
+  }
+
+  if (typeof result.data.startedAt === "number") {
+    const elapsedMs = Date.now() - result.data.startedAt;
+    if (elapsedMs >= 0 && elapsedMs < 1500) {
+      return NextResponse.json({ error: "Spam detected" }, { status: 400 });
+    }
+  }
+
   const form = await prisma.form.findFirst({
     where: { slug },
   });
