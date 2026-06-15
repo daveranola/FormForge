@@ -10,6 +10,12 @@ Live URL: https://form-forge-self.vercel.app/
 
 ![FormForge signup page](public/screenshots/signup.png)
 
+![FormForge dashboard overview](public/screenshots/dashboard-overview.png)
+
+![FormForge form builder](public/screenshots/dashboard-form-builder.png)
+
+![FormForge public form response](public/screenshots/public-form-response.png)
+
 ## Features
 
 - Projects and forms management
